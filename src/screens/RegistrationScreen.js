@@ -1,10 +1,15 @@
+import { useState } from "react";
 import {
   View,
   Text,
   Image,
+  Platform,
+  Keyboard,
+  Pressable,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from "react-native";
 
@@ -16,60 +21,106 @@ import Button from "../components/Button";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const RegistrationScreen = () => {
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+
+  const handleLoginChange = (value) => {
+    setLogin(value);
+  };
+
+  const handleEmailChange = (value) => {
+    setEmail(value);
+  };
+
+  const handlePasswordChange = (value) => {
+    setPassword(value);
+  };
+
+  const showPassword = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
+
+  const onSignUp = async () => {
+    console.log("signUp");
+  };
+
+  const onLogIn = () => {
+    console.log("login");
+  };
+
   const showButton = (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={showPassword}>
       <Text style={[styles.baseText, styles.passwordButtonText]}>Показати</Text>
     </TouchableOpacity>
   );
 
   return (
-    <>
-      <Image
-        source={require("../../assets/background_photo.png")}
-        resizeMode="cover"
-        style={styles.image}
-      />
+    <Pressable style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
+      <>
+        <Image
+          source={require("../../assets/background_photo.png")}
+          resizeMode="cover"
+          style={styles.image}
+        />
 
-      <View style={styles.container}>
-        <View style={styles.formContainer}>
-          <View style={styles.profilePicContainer}>
-            <View style={styles.profilePlaceholder} />
-            <TouchableOpacity style={styles.addButton}>
-              <Text style={styles.addButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.title}>Реєстрація</Text>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+        >
+          <View style={styles.formContainer}>
+            <View style={styles.profilePicContainer}>
+              <View style={styles.profilePlaceholder} />
+              <TouchableOpacity style={styles.addButton}>
+                <Text style={styles.addButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.title}>Реєстрація</Text>
 
-          <View style={[styles.innerContainer, styles.inputContainer]}>
-            <Input autofocus={true} placeholder="Логін" />
-            <Input placeholder="Адреса електронної пошти" />
+            <View style={[styles.innerContainer, styles.inputContainer]}>
+              <Input
+                autofocus={true}
+                value={login}
+                placeholder="Логін"
+                onTextChange={handleLoginChange}
+              />
+              <Input
+                value={email}
+                placeholder="Адреса електронної пошти"
+                onTextChange={handleEmailChange}
+              />
 
-            <Input
-              placeholder="Пароль"
-              outerStyles={styles.passwordButton}
-              rightButton={showButton}
-            />
-          </View>
+              <Input
+                value={password}
+                placeholder="Пароль"
+                rightButton={showButton}
+                outerStyles={styles.passwordButton}
+                onTextChange={handlePasswordChange}
+                secureTextEntry={isPasswordVisible}
+              />
+            </View>
 
-          <View style={[styles.innerContainer, styles.buttonContainer]}>
-            <Button>
-              <Text style={[styles.baseText, styles.loginButtonText]}>
-                Зареєструватися
-              </Text>
-            </Button>
+            <View style={[styles.innerContainer, styles.buttonContainer]}>
+              <Button onPress={onSignUp}>
+                <Text style={[styles.baseText, styles.loginButtonText]}>
+                  Зареєструватися
+                </Text>
+              </Button>
 
-            <View style={styles.signUpContainer}>
-              <Text style={[styles.baseText, styles.passwordButtonText]}>
-                Вже є акаунт?
-                <TouchableWithoutFeedback>
-                  <Text> Увійти</Text>
-                </TouchableWithoutFeedback>
-              </Text>
+              <View style={styles.signUpContainer}>
+                <Text style={[styles.baseText, styles.passwordButtonText]}>
+                  Вже є акаунт?
+                  <TouchableWithoutFeedback onPress={onLogIn}>
+                    <Text> Увійти</Text>
+                  </TouchableWithoutFeedback>
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      </View>
-    </>
+        </KeyboardAvoidingView>
+      </>
+    </Pressable>
   );
 };
 

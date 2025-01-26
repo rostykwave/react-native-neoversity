@@ -18,8 +18,8 @@ export default function App() {
     );
   }
 
-  // return <RegistrationScreen />;
-  return <LoginScreen />;
+  return <RegistrationScreen />;
+  // return <LoginScreen />;
 }
 
 const style = StyleSheet.create({

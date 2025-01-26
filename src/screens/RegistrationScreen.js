@@ -17,6 +17,7 @@ import { colors } from "../../styles/global";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
+import ProfilePhoto from "../components/ProfilePhoto";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -50,6 +51,10 @@ const RegistrationScreen = () => {
     console.log("login");
   };
 
+  const onProfilePicAddButton = () => {
+    console.log("ProfilePicAddButton");
+  };
+
   const showButton = (
     <TouchableOpacity onPress={showPassword}>
       <Text style={[styles.baseText, styles.passwordButtonText]}>Показати</Text>
@@ -70,12 +75,8 @@ const RegistrationScreen = () => {
           behavior={Platform.OS == "ios" ? "padding" : "height"}
         >
           <View style={styles.formContainer}>
-            <View style={styles.profilePicContainer}>
-              <View style={styles.profilePlaceholder} />
-              <TouchableOpacity style={styles.addButton}>
-                <Text style={styles.addButtonText}>+</Text>
-              </TouchableOpacity>
-            </View>
+            <ProfilePhoto onPress={onProfilePicAddButton} />
+
             <Text style={styles.title}>Реєстрація</Text>
 
             <View style={[styles.innerContainer, styles.inputContainer]}>
@@ -183,34 +184,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  profilePicContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-    position: "absolute",
-    top: -60,
-    left: 128,
-  },
-  profilePlaceholder: {
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    backgroundColor: colors.light_gray,
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 14,
-    right: -10,
-    borderWidth: 1,
-    borderColor: colors.orange,
-    width: 25,
-    height: 25,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addButtonText: {
-    color: colors.orange,
-    fontSize: 20,
   },
 });

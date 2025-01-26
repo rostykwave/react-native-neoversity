@@ -1,6 +1,7 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import RegistrationScreen from "./src/screens/RegistrationScreen";
+import LoginScreen from "./src/screens/LoginScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,7 +18,8 @@ export default function App() {
     );
   }
 
-  return <RegistrationScreen />;
+  // return <RegistrationScreen />;
+  return <LoginScreen />;
 }
 
 const style = StyleSheet.create({

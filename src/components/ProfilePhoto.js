@@ -1,10 +1,15 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
 import { colors } from "../../styles/global";
 
 const ProfilePhoto = ({ onPress }) => {
   return (
     <View style={styles.profilePicContainer}>
+      {/* <Image
+        source={require("../../assets/profile_photo.png")}
+        resizeMode="cover"
+        style={styles.image}
+      /> */}
       <View style={styles.profilePlaceholder} />
       <TouchableOpacity style={styles.addButton} onPress={onPress}>
         <Text style={styles.addButtonText}>+</Text>
@@ -42,6 +47,14 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: colors.orange,
     fontSize: 20,
+  },
+  image: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    height: "100%",
+    width: "100%",
+    borderRadius: 16,
   },
 });
 

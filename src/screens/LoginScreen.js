@@ -43,6 +43,7 @@ const LoginScreen = () => {
 
   const onSignUp = () => {
     console.log("signUp");
+    console.log("email", email);
   };
 
   const showButton = (

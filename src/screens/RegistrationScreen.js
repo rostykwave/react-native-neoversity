@@ -45,6 +45,8 @@ const RegistrationScreen = () => {
 
   const onSignUp = async () => {
     console.log("signUp");
+    console.log("login", login);
+    console.log("email", email);
   };
 
   const onLogIn = () => {

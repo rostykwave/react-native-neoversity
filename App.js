@@ -1,8 +1,7 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
-import AuthNavigator from "./src/navigation/AuthNavigator";
-import BottomTabNavigator from "./src/navigation/BottomTabNavigator";
+import StackNavigator from "./src/navigation/StackNavigator";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -10,8 +9,6 @@ export default function App() {
     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
   });
-
-  const isLoggedIn = true;
 
   if (!fontsLoaded) {
     return (
@@ -23,7 +20,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <BottomTabNavigator /> : <AuthNavigator />}
+      <StackNavigator />
     </NavigationContainer>
   );
 }

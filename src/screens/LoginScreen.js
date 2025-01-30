@@ -20,7 +20,7 @@ import Button from "../components/Button";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const LoginScreen = () => {
+const LoginScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
@@ -38,12 +38,11 @@ const LoginScreen = () => {
   };
 
   const onLogin = async () => {
-    console.log("login");
+    navigation.navigate("Home", { email });
   };
 
-  const onSignUp = () => {
-    console.log("signUp");
-    console.log("email", email);
+  const onRegistration = () => {
+    navigation.navigate("Registration");
   };
 
   const showButton = (
@@ -93,11 +92,14 @@ const LoginScreen = () => {
                 </Text>
               </Button>
 
-              <View style={styles.signUpContainer}>
+              <View style={styles.registrationContainer}>
                 <Text style={[styles.baseText, styles.passwordButtonText]}>
                   Немає акаунту?
-                  <TouchableWithoutFeedback onPress={onSignUp}>
-                    <Text style={styles.signUpText}> Зареєструватися</Text>
+                  <TouchableWithoutFeedback onPress={onRegistration}>
+                    <Text style={styles.registrationText}>
+                      {" "}
+                      Зареєструватися
+                    </Text>
                   </TouchableWithoutFeedback>
                 </Text>
               </View>
@@ -164,12 +166,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  signUpContainer: {
+  registrationContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  signUpText: {
+  registrationText: {
     textDecorationLine: "underline",
   },
 });

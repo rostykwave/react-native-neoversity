@@ -21,7 +21,7 @@ import ProfilePhoto from "../components/ProfilePhoto";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({ route, navigation }) => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,13 +44,11 @@ const RegistrationScreen = () => {
   };
 
   const onSignUp = async () => {
-    console.log("signUp");
-    console.log("login", login);
-    console.log("email", email);
+    navigation.navigate("Home", { email });
   };
 
   const onLogIn = () => {
-    console.log("login");
+    navigation.navigate("Login");
   };
 
   const onProfilePicAddButton = () => {

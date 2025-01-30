@@ -10,6 +10,7 @@ const CreatePostNavigator = () => {
     <Stack.Navigator
       initialRouteName="CreatePost"
       screenOptions={({ navigation }) => ({
+        title: "Створити публікацію",
         headerRightContainerStyle: { paddingRight: 16 },
         headerLeftContainerStyle: { paddingLeft: 16 },
         headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,

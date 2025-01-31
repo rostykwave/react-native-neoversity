@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { colors } from "../../styles/global";
 
-import PostsScreen from "../screens/PostsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import LogoutButton from "../components/LogoutButton";
 import BackButton from "../components/BackButton";
@@ -11,6 +10,7 @@ import CreatePostNavigator from "./CreatePostNavigator";
 import PostsIcon from "../../icons/PostsIcon";
 import CreatePostIcon from "../../icons/CreatePostIcon";
 import ProfileIcon from "../../icons/ProfileIcon";
+import PostsNavigator from "./PostsNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,12 +33,9 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen
         name="Posts"
-        component={PostsScreen}
+        component={PostsNavigator}
         options={({ navigation }) => ({
-          title: "Публікації",
-          headerRight: () => (
-            <LogoutButton onPress={() => console.log("log out")} />
-          ),
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <View>
               <PostsIcon color={colors.black_primary} />

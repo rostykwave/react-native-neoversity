@@ -1,10 +1,4 @@
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 const MapScreen = ({ navigation, route }) => {

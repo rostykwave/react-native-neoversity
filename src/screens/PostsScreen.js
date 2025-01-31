@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styles/global";
@@ -19,16 +26,28 @@ const posts = [
   },
 ];
 
-const PostsScreen = () => {
+const PostsScreen = ({ navigation, route }) => {
+  const openComments = () => {
+    navigation.navigate("Comments");
+  };
+
+  const openMaps = () => {
+    navigation.navigate("Maps");
+  };
+
   const renderPost = ({ item }) => (
     <View style={styles.postContainer}>
       {/* <Image source={{ uri: item.image }} style={styles.postImage} /> */}
       <Image source={item.image} style={styles.postImage} />
       <Text style={styles.postTitle}>{item.title}</Text>
       <View style={styles.postFooter}>
-        <Ionicons name="chatbubble-outline" size={18} color="#aaa" />
+        <TouchableOpacity onPress={openComments}>
+          <Ionicons name="chatbubble-outline" size={18} color="#aaa" />
+        </TouchableOpacity>
         <Text style={styles.commentsCount}>0</Text>
-        <Text style={styles.postLocation}>{item.location}</Text>
+        <TouchableOpacity onPress={openMaps}>
+          <Text style={styles.postLocation}>{item.location}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

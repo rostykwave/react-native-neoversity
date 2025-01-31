@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import BackButton from "../components/BackButton";
 import CreatePostsScreen from "../screens/CreatePostsScreen";
+import CameraScreen from "../screens/CameraScreen";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const CreatePostNavigator = () => {
       })}
     >
       <Stack.Screen name="CreatePost" component={CreatePostsScreen} />
+      <Stack.Screen name="Camera" component={CameraScreen} />
     </Stack.Navigator>
   );
 };

@@ -1,135 +1,216 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Image,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import Button from "../components/Button";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import "react-native-get-random-values";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import * as ImagePicker from "expo-image-picker";
 
 import { colors } from "../../styles/global";
 
-const CreatePostsScreen = () => {
-  const onPostPublish = () => {
-    console.log("onPostPublish");
+import Button from "../components/Button";
+import Input from "../components/Input";
+
+const PLACES_KEY = "AIzaSyAhxqfyeRiiSj3Os9KyN3TcVFCxk6hQqh0";
+
+const CreatePostScreen = ({ navigation, route }) => {
+  const params = route?.params;
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [title, setTitle] = useState("");
+  const [address, setAddress] = useState("");
+
+  const navigateToCameraScreen = () => {
+    navigation.navigate("Camera");
+  };
+
+  const pickImage = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert("Permission to access media library is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+
+      setSelectedImage(uri);
+    }
+  };
+
+  const onClearData = () => {
+    setSelectedImage("");
+    setTitle("");
+    setAddress("");
+  };
+
+  useEffect(() => {
+    if (!params?.photo) return;
+
+    setSelectedImage(params.photo);
+  }, [params]);
+
+  const onPublish = async () => {
+    try {
+      navigation.navigate("Posts");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      {/* Upload Photo Section */}
-      <TouchableOpacity style={styles.photoContainer}>
-        <View style={styles.photoPlaceholder}>
-          <Ionicons name="camera-outline" size={32} color="#ccc" />
+    <View style={styles.section}>
+      <View style={styles.imageContainer}>
+        <View style={styles.emptyImgContainer}>
+          {selectedImage && (
+            <Image source={{ uri: selectedImage }} style={styles.image} />
+          )}
+
+          <TouchableOpacity
+            style={styles.cameraIconWrapper}
+            onPress={navigateToCameraScreen}
+            hitSlop={20}
+          >
+            <Ionicons name="camera" size={34} color="gray" />
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
-      <Text style={styles.photoText}>Завантажте фото</Text>
 
-      {/* Title Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Назва..."
-        placeholderTextColor="#aaa"
-      />
+        <TouchableOpacity onPress={pickImage}>
+          <Text style={[styles.btnText, styles.grayText]}>Завантажте фото</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* Location Input */}
-      <View style={styles.locationContainer}>
-        <Ionicons name="location-outline" size={20} color="#aaa" />
-        <TextInput
-          style={styles.locationInput}
+      <View style={{ flex: 1 }}>
+        <Input
+          value={title}
+          placeholder="Назва..."
+          outerStyles={styles.input}
+          onTextChange={setTitle}
+        />
+
+        <GooglePlacesAutocomplete
           placeholder="Місцевість..."
-          placeholderTextColor="#aaa"
+          minLength={4}
+          enablePoweredByContainer={false}
+          fetchDetails
+          onPress={(data, details = null) => {
+            setAddress(data.description);
+          }}
+          query={{ key: PLACES_KEY }}
+          styles={{
+            container: {
+              flex: 1,
+            },
+            textInputContainer: {
+              flexDirection: "row",
+              paddingHorizontal: 8,
+            },
+            textInput: {
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              fontSize: 15,
+              flex: 1,
+              borderBottomWidth: 1,
+              borderColor: colors.border_gray,
+            },
+            row: {
+              backgroundColor: "#FFFFFF",
+              padding: 13,
+              height: 44,
+              flexDirection: "row",
+            },
+            predefinedPlacesDescription: {
+              color: "#1faadb",
+            },
+            listView: {
+              maxHeight: 160,
+            },
+          }}
         />
       </View>
 
-      {/* Publish Button */}
-      <Button onPress={onPostPublish} buttonStyle={styles.disabledButton}>
-        <Text style={[styles.baseText, styles.disabledButtonText]}>
-          Опублікувати
-        </Text>
+      <Button onPress={onPublish}>
+        <Text style={styles.btnText}>Опублікувати</Text>
+      </Button>
+
+      <Button buttonStyle={styles.deleteBtn} onPress={onClearData}>
+        <Ionicons name="trash" color={colors.text_gray} size={24} />
       </Button>
     </View>
   );
 };
 
+export default CreatePostScreen;
+
 const styles = StyleSheet.create({
-  container: {
+  section: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 16,
+    gap: 32,
+    paddingVertical: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 82,
+    backgroundColor: colors.white,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
-    marginRight: 24, // Balance for the back button
-  },
-  photoContainer: {
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  photoPlaceholder: {
-    width: "100%",
-    height: 200,
-    backgroundColor: "#f4f4f4",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  photoText: {
-    fontSize: 14,
-    color: "#aaa",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    paddingVertical: 8,
-    fontSize: 16,
-    color: "#000",
-    marginBottom: 16,
-  },
-  locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    marginBottom: 24,
-  },
-  locationInput: {
-    flex: 1,
-    paddingVertical: 8,
-    fontSize: 16,
-    color: "#000",
-  },
-  disabledButton: {
-    backgroundColor: colors.light_gray,
-    paddingVertical: 16,
-    borderRadius: 24,
-    alignItems: "center",
-  },
-  disabledButtonText: {
-    color: colors.text_gray,
-    textAlign: "center",
-  },
-  baseText: {
-    fontWeight: "400",
+  btnText: {
     fontSize: 16,
     lineHeight: 18,
-  },
-  publishButtonText: {
+    fontWeight: "400",
     color: colors.white,
     textAlign: "center",
   },
+  grayText: {
+    textAlign: "left",
+    color: colors.text_gray,
+  },
+  imageContainer: {
+    gap: 8,
+  },
+  emptyImgContainer: {
+    width: "100%",
+    height: 240,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border_gray,
+    backgroundColor: colors.light_gray,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cameraIconWrapper: {
+    position: "absolute",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+  },
+  input: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    backgroundColor: colors.white,
+  },
+  deleteBtn: {
+    position: "absolute",
+    left: "46%",
+    bottom: "5%",
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.light_gray,
+  },
 });
-
-export default CreatePostsScreen;

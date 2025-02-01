@@ -6,7 +6,7 @@ import * as Location from "expo-location";
 const GOOGLE_API_KEY = "AIzaSyAvJDWtM_VcydTMMfufgfpNwyOQDuF-_gc";
 
 // Function to fetch coordinates for a given city
-const searchCity = async (city, GOOGLE_API_KEY, setRegion) => {
+const searchCity = async ({ city, GOOGLE_API_KEY, setRegion }) => {
   try {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${GOOGLE_API_KEY}`
@@ -23,10 +23,10 @@ const searchCity = async (city, GOOGLE_API_KEY, setRegion) => {
         longitudeDelta: 0.0421,
       });
     } else {
-      Alert.alert(
-        "City not found",
-        "Please check the city name and try again."
-      );
+      // Alert.alert(
+      //   "City not found",
+      //   "Please check the city name and try again."
+      // );
     }
   } catch (error) {
     Alert.alert("Error", "Unable to fetch city coordinates. Please try again.");
@@ -52,7 +52,7 @@ const MapScreen = ({ navigation, route }) => {
         return;
       }
       if (city) {
-        await searchCity(city, GOOGLE_API_KEY, setRegion);
+        await searchCity({ city, GOOGLE_API_KEY, setRegion });
       }
 
       let location = await Location.getCurrentPositionAsync({});

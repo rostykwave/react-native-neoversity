@@ -58,6 +58,12 @@ const CreatePostScreen = ({ navigation, route }) => {
 
   const onPublish = async () => {
     try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
       let location = await Location.getCurrentPositionAsync({});
       console.log("location", location);
       navigation.navigate("Posts");

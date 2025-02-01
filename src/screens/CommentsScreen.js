@@ -12,7 +12,7 @@ import {
 
 const CommentsScreen = ({ navigation, route }) => {
   const imageSrc = route?.params?.imageSrc;
-  console.log("imageSrc", imageSrc);
+
   const [comments, setComments] = useState([
     {
       id: "1",

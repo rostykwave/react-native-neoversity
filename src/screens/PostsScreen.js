@@ -91,16 +91,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     // padding: 16,
-    marginTop: 32,
+    paddingVertical: 32,
     backgroundColor: colors.white,
-    // borderBottomWidth: 1,
-    // borderBottomColor: "#eee",
   },
   profileImage: {
     width: 50,
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   postContainer: {
-    marginTop: 32,
+    marginBottom: 32,
     backgroundColor: colors.white,
     borderRadius: 8,
     overflow: "hidden",

@@ -16,13 +16,21 @@ const posts = [
     id: "1",
     image: require("../../assets/forests.png"),
     title: "Ліс",
-    location: "Ivano-Frankivsk Region, Ukraine",
+    location: {
+      name: "Ivano-Frankivsk Region, Ukraine",
+      latitude: 48.9226,
+      longitude: 24.7097,
+    },
   },
   {
     id: "2",
     image: require("../../assets/sunsets.png"),
     title: "Захід сонця",
-    location: "Odesa Region, Ukraine",
+    location: {
+      name: "Odesa Region, Ukraine",
+      latitude: 46.482952,
+      longitude: 30.712481,
+    },
   },
 ];
 
@@ -31,8 +39,8 @@ const PostsScreen = ({ navigation, route }) => {
     navigation.navigate("Comments");
   };
 
-  const openMaps = (city) => {
-    navigation.navigate("Maps", { city });
+  const openMaps = (location) => {
+    navigation.navigate("Maps", location);
   };
 
   const renderPost = ({ item }) => (
@@ -46,7 +54,7 @@ const PostsScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         <Text style={styles.commentsCount}>0</Text>
         <TouchableOpacity onPress={() => openMaps(item.location)}>
-          <Text style={styles.postLocation}>{item.location}</Text>
+          <Text style={styles.postLocation}>{item.location.name}</Text>
         </TouchableOpacity>
       </View>
     </View>

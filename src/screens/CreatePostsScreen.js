@@ -9,6 +9,7 @@ import { colors } from "../../styles/global";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
+import * as Location from "expo-location";
 
 const PLACES_KEY = "AIzaSyAhxqfyeRiiSj3Os9KyN3TcVFCxk6hQqh0";
 
@@ -57,6 +58,8 @@ const CreatePostScreen = ({ navigation, route }) => {
 
   const onPublish = async () => {
     try {
+      let location = await Location.getCurrentPositionAsync({});
+      console.log("location", location);
       navigation.navigate("Posts");
     } catch (error) {
       console.log(error);

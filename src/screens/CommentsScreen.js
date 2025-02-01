@@ -10,7 +10,9 @@ import {
   Dimensions,
 } from "react-native";
 
-const CommentsScreen = () => {
+const CommentsScreen = ({ navigation, route }) => {
+  const imageSrc = route?.params?.imageSrc;
+  console.log("imageSrc", imageSrc);
   const [comments, setComments] = useState([
     {
       id: "1",
@@ -45,10 +47,7 @@ const CommentsScreen = () => {
   return (
     <View style={styles.container}>
       {/* Image */}
-      <Image
-        source={require("../../assets/sunsets.png")}
-        style={styles.image}
-      />
+      <Image source={imageSrc} style={styles.image} />
 
       {/* Comments */}
       <FlatList

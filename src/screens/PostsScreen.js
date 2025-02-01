@@ -35,8 +35,8 @@ const posts = [
 ];
 
 const PostsScreen = ({ navigation, route }) => {
-  const openComments = () => {
-    navigation.navigate("Comments");
+  const openComments = ({ imageSrc }) => {
+    navigation.navigate("Comments", { imageSrc });
   };
 
   const openMaps = (location) => {
@@ -49,7 +49,9 @@ const PostsScreen = ({ navigation, route }) => {
       <Image source={item.image} style={styles.postImage} />
       <Text style={styles.postTitle}>{item.title}</Text>
       <View style={styles.postFooter}>
-        <TouchableOpacity onPress={openComments}>
+        <TouchableOpacity
+          onPress={() => openComments({ imageSrc: item.image })}
+        >
           <Ionicons name="chatbubble-outline" size={18} color="#aaa" />
         </TouchableOpacity>
         <Text style={styles.commentsCount}>0</Text>

@@ -5,7 +5,7 @@ import BottomTabNavigator from "./BottomTabNavigator";
 
 const Stack = createStackNavigator();
 
-const StackNavigator = () => {
+const AuthNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="Login"
@@ -20,4 +20,4 @@ const StackNavigator = () => {
   );
 };
 
-export default StackNavigator;
+export default AuthNavigator;

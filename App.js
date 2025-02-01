@@ -1,7 +1,13 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useFonts } from "expo-font";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import StackNavigator from "./src/navigation/StackNavigator";
+import { useFonts } from "expo-font";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store from "./src/redux/store/store";
+import { useEffect } from "react";
+import { authStateChanged } from "./src/utils/auth";
+import BottomTabNavigator from "./src/navigation/BottomTabNavigator";
+import AuthNavigator from "./src/navigation/AuthNavigator";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,11 +25,31 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
+    <Provider store={store.store}>
+      <PersistGate
+        loading={<Text>Loading...</Text>}
+        persistor={store.persistor}
+      >
+        <AuthListener />
+      </PersistGate>
+    </Provider>
   );
 }
+
+const AuthListener = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.userInfo);
+
+  useEffect(() => {
+    authStateChanged(dispatch);
+  }, [dispatch]);
+
+  return (
+    <NavigationContainer>
+      {user ? <BottomTabNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
+  );
+};
 
 const style = StyleSheet.create({
   section: {

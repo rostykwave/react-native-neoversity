@@ -11,7 +11,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import * as Location from "expo-location";
 
-const PLACES_KEY = "AIzaSyAhxqfyeRiiSj3Os9KyN3TcVFCxk6hQqh0";
+const PLACES_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
 
 const CreatePostScreen = ({ navigation, route }) => {
   const params = route?.params;

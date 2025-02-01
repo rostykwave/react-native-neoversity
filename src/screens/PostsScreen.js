@@ -31,8 +31,8 @@ const PostsScreen = ({ navigation, route }) => {
     navigation.navigate("Comments");
   };
 
-  const openMaps = () => {
-    navigation.navigate("Maps");
+  const openMaps = (city) => {
+    navigation.navigate("Maps", { city });
   };
 
   const renderPost = ({ item }) => (
@@ -45,7 +45,7 @@ const PostsScreen = ({ navigation, route }) => {
           <Ionicons name="chatbubble-outline" size={18} color="#aaa" />
         </TouchableOpacity>
         <Text style={styles.commentsCount}>0</Text>
-        <TouchableOpacity onPress={openMaps}>
+        <TouchableOpacity onPress={() => openMaps(item.location)}>
           <Text style={styles.postLocation}>{item.location}</Text>
         </TouchableOpacity>
       </View>

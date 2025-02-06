@@ -1,15 +1,24 @@
-import { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState, useRef } from "react";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import "react-native-get-random-values";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as ImagePicker from "expo-image-picker";
+import { nanoid } from "nanoid";
 
 import { colors } from "../../styles/global";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
-import * as Location from "expo-location";
+import { useSelector } from "react-redux";
+import { addPost, getPosts, uploadImage } from "../utils/firestore";
 
 const PLACES_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
 
@@ -18,6 +27,10 @@ const CreatePostScreen = ({ navigation, route }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const user = useSelector((state) => state.user.userInfo);
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
+  const autocompleteRef = useRef(null);
 
   const navigateToCameraScreen = () => {
     navigation.navigate("Camera");
@@ -26,6 +39,7 @@ const CreatePostScreen = ({ navigation, route }) => {
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
+
     if (!permissionResult.granted) {
       alert("Permission to access media library is required!");
       return;
@@ -34,7 +48,7 @@ const CreatePostScreen = ({ navigation, route }) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: "images",
       allowsEditing: false,
-      quality: 1,
+      quality: 0.3,
     });
 
     if (!result.canceled) {
@@ -44,10 +58,31 @@ const CreatePostScreen = ({ navigation, route }) => {
     }
   };
 
+  const uploadImageToStorage = async () => {
+    if (!selectedImage) return;
+
+    try {
+      const response = await fetch(selectedImage);
+      const file = await response.blob();
+      const fileName = selectedImage.split("/").pop(); // Отримуємо ім'я файлу з URI
+      const fileType = file.type; // Отримуємо тип файлу
+      const imageFile = new File([file], fileName, { type: fileType });
+
+      const uploadedImageUrl = await uploadImage(user.uid, imageFile, fileName);
+
+      return uploadedImageUrl;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
   const onClearData = () => {
     setSelectedImage("");
+    setUploadedImage("");
     setTitle("");
     setAddress("");
+    autocompleteRef?.current?.setAddressText("");
   };
 
   useEffect(() => {
@@ -57,16 +92,22 @@ const CreatePostScreen = ({ navigation, route }) => {
   }, [params]);
 
   const onPublish = async () => {
-    try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert("Permission to access location was denied");
-        return;
-      }
+    if (!user) return;
 
-      let location = await Location.getCurrentPositionAsync({});
-      console.log("location", location);
-      navigation.navigate("Posts");
+    try {
+      const imageUrl = await uploadImageToStorage();
+      const postId = nanoid();
+
+      await addPost(postId, {
+        address,
+        id: postId,
+        image: imageUrl,
+        userId: user.uid,
+        title,
+      });
+
+      Alert.alert("Пост успішно створено!");
+      onClearData();
     } catch (error) {
       console.log(error);
     }

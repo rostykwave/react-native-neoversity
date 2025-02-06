@@ -11,13 +11,17 @@ import PostsIcon from "../../icons/PostsIcon";
 import CreatePostIcon from "../../icons/CreatePostIcon";
 import ProfileIcon from "../../icons/ProfileIcon";
 import PostsNavigator from "./PostsNavigator";
+import { logoutDB } from "../utils/auth";
+import { useDispatch } from "react-redux";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const dispatch = useDispatch();
+
   return (
     <Tab.Navigator
-      initialRouteName="Posts"
+      initialRouteName="PostsStack"
       screenOptions={({ navigation }) => ({
         tabBarLabel: "",
         tabBarStyle: {
@@ -32,7 +36,7 @@ const BottomTabNavigator = () => {
       })}
     >
       <Tab.Screen
-        name="Posts"
+        name="PostsStack"
         component={PostsNavigator}
         options={({ navigation }) => ({
           headerShown: false,
@@ -66,7 +70,7 @@ const BottomTabNavigator = () => {
         options={({ navigation }) => ({
           title: "Profile",
           headerRight: () => (
-            <LogoutButton onPress={() => console.log("log out")} />
+            <LogoutButton onPress={() => logoutDB(dispatch)} />
           ),
           tabBarIcon: ({ focused }) => (
             <View style={focused && styles.addButton}>

@@ -5,10 +5,14 @@ import PostsScreen from "../screens/PostsScreen";
 import CommentsScreen from "../screens/CommentsScreen";
 import MapScreen from "../screens/MapScreen";
 import LogoutButton from "../components/LogoutButton";
+import { logoutDB } from "../utils/auth";
+import { useDispatch } from "react-redux";
 
 const Stack = createStackNavigator();
 
 const PostsNavigator = () => {
+  const dispatch = useDispatch();
+
   return (
     <Stack.Navigator
       initialRouteName="Posts"
@@ -24,7 +28,7 @@ const PostsNavigator = () => {
         options={{
           title: "Публікації",
           headerRight: () => (
-            <LogoutButton onPress={() => console.log("log out")} />
+            <LogoutButton onPress={() => logoutDB(dispatch)} />
           ),
         }}
       />

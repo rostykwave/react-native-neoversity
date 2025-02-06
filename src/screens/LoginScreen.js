@@ -17,6 +17,8 @@ import { colors } from "../../styles/global";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { loginDB } from "../utils/auth";
+import { useDispatch } from "react-redux";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -24,6 +26,9 @@ const LoginScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [selectedInput, setSelelectedInput] = useState("password");
+
+  const dispatch = useDispatch();
 
   const handleEmailChange = (value) => {
     setEmail(value);
@@ -38,7 +43,14 @@ const LoginScreen = ({ route, navigation }) => {
   };
 
   const onLogin = async () => {
-    navigation.navigate("Home", { email });
+    console.log("onLogin");
+
+    try {
+      await loginDB({ email, password }, dispatch);
+    } catch (err) {
+      Alert.alert("err");
+      console.error("Login error:", err); // Логування помилок
+    }
   };
 
   const onRegistration = () => {
@@ -46,7 +58,7 @@ const LoginScreen = ({ route, navigation }) => {
   };
 
   const showButton = (
-    <TouchableOpacity onPress={showPassword}>
+    <TouchableOpacity onPress={() => showPassword(selectedInput)}>
       <Text style={[styles.baseText, styles.passwordButtonText]}>Показати</Text>
     </TouchableOpacity>
   );
@@ -75,14 +87,16 @@ const LoginScreen = ({ route, navigation }) => {
                 onTextChange={handleEmailChange}
               />
 
-              <Input
-                value={password}
-                placeholder="Пароль"
-                rightButton={showButton}
-                outerStyles={styles.passwordButton}
-                onTextChange={handlePasswordChange}
-                secureTextEntry={isPasswordVisible}
-              />
+              <Pressable onPress={() => setSelelectedInput("password")}>
+                <Input
+                  value={password}
+                  placeholder="Пароль"
+                  rightButton={showButton}
+                  outerStyles={styles.passwordButton}
+                  onTextChange={(value) => handlePasswordChange(value)}
+                  secureTextEntry={isPasswordVisible}
+                />
+              </Pressable>
             </View>
 
             <View style={[styles.innerContainer, styles.buttonContainer]}>
@@ -96,10 +110,7 @@ const LoginScreen = ({ route, navigation }) => {
                 <Text style={[styles.baseText, styles.passwordButtonText]}>
                   Немає акаунту?
                   <TouchableWithoutFeedback onPress={onRegistration}>
-                    <Text style={styles.registrationText}>
-                      {" "}
-                      Зареєструватися
-                    </Text>
+                    <Text style={styles.registrationText}>Зареєструватися</Text>
                   </TouchableWithoutFeedback>
                 </Text>
               </View>

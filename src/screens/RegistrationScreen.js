@@ -5,15 +5,16 @@ import {
   Image,
   Platform,
   Keyboard,
-  Pressable,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 
 import { colors } from "../../styles/global";
+import { registerDB } from "../utils/auth";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -26,6 +27,7 @@ const RegistrationScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [selectedInput, setSelelectedInput] = useState("password");
 
   const handleLoginChange = (value) => {
     setLogin(value);
@@ -44,7 +46,7 @@ const RegistrationScreen = ({ route, navigation }) => {
   };
 
   const onSignUp = async () => {
-    navigation.navigate("Home", { email });
+    registerDB({ login, email, password });
   };
 
   const onLogIn = () => {
@@ -56,13 +58,13 @@ const RegistrationScreen = ({ route, navigation }) => {
   };
 
   const showButton = (
-    <TouchableOpacity onPress={showPassword}>
+    <TouchableOpacity onPress={() => showPassword(selectedInput)}>
       <Text style={[styles.baseText, styles.passwordButtonText]}>Показати</Text>
     </TouchableOpacity>
   );
 
   return (
-    <Pressable style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <>
         <Image
           source={require("../../assets/background_photo.png")}
@@ -92,14 +94,16 @@ const RegistrationScreen = ({ route, navigation }) => {
                 onTextChange={handleEmailChange}
               />
 
-              <Input
-                value={password}
-                placeholder="Пароль"
-                rightButton={showButton}
-                outerStyles={styles.passwordButton}
-                onTextChange={handlePasswordChange}
-                secureTextEntry={isPasswordVisible}
-              />
+              <Pressable onPress={() => setSelelectedInput("password")}>
+                <Input
+                  value={password}
+                  placeholder="Пароль"
+                  rightButton={showButton}
+                  outerStyles={styles.passwordButton}
+                  onTextChange={(value) => handlePasswordChange(value)}
+                  secureTextEntry={isPasswordVisible}
+                />
+              </Pressable>
             </View>
 
             <View style={[styles.innerContainer, styles.buttonContainer]}>
@@ -121,7 +125,7 @@ const RegistrationScreen = ({ route, navigation }) => {
           </View>
         </KeyboardAvoidingView>
       </>
-    </Pressable>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -69,3 +69,16 @@ export const getImageUrl = async (imageRef) => {
   const url = await getDownloadURL(imageRef);
   return url;
 };
+
+export const addComment = async (userId, coment) => {
+  try {
+    await setDoc(
+      doc(db, "coments", userId),
+      { userId, coments: [coment] },
+      { merge: true }
+    );
+    console.log("Coment added:", userId);
+  } catch (error) {
+    console.error("Error adding coment:", error);
+  }
+};

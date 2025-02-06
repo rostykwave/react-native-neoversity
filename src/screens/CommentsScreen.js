@@ -8,10 +8,55 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
 } from "react-native";
+import Input from "../components/Input";
+import { addComment } from "../utils/firestore";
+import { useSelector } from "react-redux";
+import { nanoid } from "nanoid";
 
 const CommentsScreen = ({ navigation, route }) => {
   const imageSrc = route?.params?.imageSrc;
+  const [commentInput, setCommentInput] = useState("");
+  const user = useSelector((state) => state.user.userInfo);
+
+  const handleCommentInput = (value) => {
+    setCommentInput(value);
+  };
+
+  const sendComment = async () => {
+    console.log("sendComment");
+    console.log("commentInput", commentInput);
+
+    if (!user) return;
+
+    try {
+      const commentId = nanoid();
+
+      await addComment(commentId, {
+        id: commentId,
+        userId: user.uid,
+        text: commentInput,
+      });
+
+      Alert.alert("Пост успішно створено!");
+      onClearData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onClearData = () => {
+    setCommentInput("");
+  };
+
+  const sendButton = (
+    <TouchableOpacity style={styles.sendButton} onPress={sendComment}>
+      <Text style={styles.sendButtonText}>↑</Text>
+    </TouchableOpacity>
+  );
 
   const [comments, setComments] = useState([
     {
@@ -45,7 +90,10 @@ const CommentsScreen = ({ navigation, route }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+    >
       {/* Image */}
       <Image source={imageSrc} style={styles.image} />
 
@@ -58,13 +106,20 @@ const CommentsScreen = ({ navigation, route }) => {
       />
 
       {/* Input Field */}
-      <View style={styles.inputContainer}>
+      {/* <View style={styles.inputContainer}>
         <TextInput placeholder="Коментувати..." style={styles.input} />
         <TouchableOpacity style={styles.sendButton}>
           <Text style={styles.sendButtonText}>↑</Text>
         </TouchableOpacity>
-      </View>
-    </View>
+      </View> */}
+      <Input
+        value={commentInput}
+        placeholder="Коментувати..."
+        onTextChange={handleCommentInput}
+        outerStyles={styles.inputContainer}
+        rightButton={sendButton}
+      />
+    </KeyboardAvoidingView>
   );
 };
 
@@ -124,22 +179,22 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
   },
-  input: {
-    flex: 1,
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    backgroundColor: "#f5f5f5",
-  },
+  // input: {
+  //   flex: 1,
+  //   height: 40,
+  //   borderWidth: 1,
+  //   borderColor: "#ddd",
+  //   borderRadius: 20,
+  //   paddingHorizontal: 10,
+  //   backgroundColor: "#f5f5f5",
+  // },
   sendButton: {
-    marginLeft: 10,
     width: 40,
     height: 40,
     borderRadius: 20,

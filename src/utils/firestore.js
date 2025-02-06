@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../../config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -74,7 +74,7 @@ export const addComment = async (userId, coment) => {
   try {
     await setDoc(
       doc(db, "coments", userId),
-      { userId, coments: [coment] },
+      { userId, coments: [coment], createdAt: serverTimestamp() },
       { merge: true }
     );
     console.log("Coment added:", userId);

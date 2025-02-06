@@ -29,14 +29,16 @@ const CommentsScreen = ({ navigation, route }) => {
 
     try {
       const commentId = nanoid();
-
-      await addComment(commentId, {
+      const newComment = {
         id: commentId,
         userId: user.uid,
         text: commentInput,
-      });
+      };
 
-      Alert.alert("Коментар успішно створено!");
+      await addComment(commentId, newComment);
+
+      // Alert.alert("Коментар успішно створено!");
+      setComments((prev) => [...prev, newComment]);
       onClearData();
     } catch (error) {
       console.log(error);

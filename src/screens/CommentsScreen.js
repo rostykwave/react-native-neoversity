@@ -3,11 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   FlatList,
   Image,
   TouchableOpacity,
-  Dimensions,
   KeyboardAvoidingView,
   Platform,
   Alert,
@@ -27,9 +25,6 @@ const CommentsScreen = ({ navigation, route }) => {
   };
 
   const sendComment = async () => {
-    console.log("sendComment");
-    console.log("commentInput", commentInput);
-
     if (!user) return;
 
     try {
@@ -41,7 +36,7 @@ const CommentsScreen = ({ navigation, route }) => {
         text: commentInput,
       });
 
-      Alert.alert("Пост успішно створено!");
+      Alert.alert("Коментар успішно створено!");
       onClearData();
     } catch (error) {
       console.log(error);
@@ -106,12 +101,6 @@ const CommentsScreen = ({ navigation, route }) => {
       />
 
       {/* Input Field */}
-      {/* <View style={styles.inputContainer}>
-        <TextInput placeholder="Коментувати..." style={styles.input} />
-        <TouchableOpacity style={styles.sendButton}>
-          <Text style={styles.sendButtonText}>↑</Text>
-        </TouchableOpacity>
-      </View> */}
       <Input
         value={commentInput}
         placeholder="Коментувати..."
@@ -185,15 +174,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#ddd",
   },
-  // input: {
-  //   flex: 1,
-  //   height: 40,
-  //   borderWidth: 1,
-  //   borderColor: "#ddd",
-  //   borderRadius: 20,
-  //   paddingHorizontal: 10,
-  //   backgroundColor: "#f5f5f5",
-  // },
   sendButton: {
     width: 40,
     height: 40,

@@ -87,10 +87,7 @@ const CommentsScreen = ({ navigation, route }) => {
   );
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-    >
+    <View style={styles.container}>
       {/* Image */}
       <Image source={imageSrc} style={styles.image} />
 
@@ -101,16 +98,19 @@ const CommentsScreen = ({ navigation, route }) => {
         keyExtractor={(item) => item.id}
         style={styles.commentsList}
       />
-
-      {/* Input Field */}
-      <Input
-        value={commentInput}
-        placeholder="Коментувати..."
-        onTextChange={handleCommentInput}
-        outerStyles={styles.inputContainer}
-        rightButton={sendButton}
-      />
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      >
+        {/* Input Field */}
+        <Input
+          value={commentInput}
+          placeholder="Коментувати..."
+          onTextChange={handleCommentInput}
+          outerStyles={styles.inputContainer}
+          rightButton={sendButton}
+        />
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 

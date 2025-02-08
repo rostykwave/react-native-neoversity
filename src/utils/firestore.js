@@ -70,15 +70,15 @@ export const getImageUrl = async (imageRef) => {
   return url;
 };
 
-export const addComment = async (userId, coment) => {
+export const addComment = async (userId, comment) => {
   try {
     await setDoc(
-      doc(db, "coments", userId),
-      { userId, coments: [coment], createdAt: serverTimestamp() },
+      doc(db, "comments", userId),
+      { userId, comments: [comment], createdAt: serverTimestamp() },
       { merge: true }
     );
-    console.log("Coment added:", userId);
+    console.log("Comment added:", userId);
   } catch (error) {
-    console.error("Error adding coment:", error);
+    console.error("Error adding comment:", error);
   }
 };

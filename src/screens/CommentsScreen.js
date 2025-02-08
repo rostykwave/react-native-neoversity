@@ -11,34 +11,16 @@ import {
 } from "react-native";
 import Input from "../components/Input";
 import { addComment } from "../utils/firestore";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
-
-const commentsExample = [
-  {
-    id: "1",
-    text: "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!",
-    time: "09 червня, 2020 | 08:40",
-    avatar: require("../../assets/avatar1.png"),
-  },
-  {
-    id: "2",
-    text: "A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.",
-    time: "09 червня, 2020 | 09:14",
-    avatar: require("../../assets/avatar2.png"),
-  },
-  {
-    id: "3",
-    text: "Thank you! That was very helpful!",
-    time: "09 червня, 2020 | 09:20",
-    avatar: require("../../assets/avatar1.png"),
-  },
-];
+import { addCommentInfo } from "../redux/reducers/commentSlice";
 
 const CommentsScreen = ({ navigation, route }) => {
   const imageSrc = route?.params?.imageSrc;
   const [commentInput, setCommentInput] = useState("");
   const user = useSelector((state) => state.user.userInfo);
+  const comments = useSelector((state) => state.comment.commentInfo);
+  const dispatch = useDispatch();
 
   const handleCommentInput = (value) => {
     setCommentInput(value);
@@ -55,9 +37,10 @@ const CommentsScreen = ({ navigation, route }) => {
         text: commentInput,
       };
 
-      await addComment(commentId, newComment);
+      await addComment(user.uid, newComment);
 
-      setComments((prev) => [...prev, newComment]);
+      // setComments((prev) => [...prev, newComment]);
+      dispatch(addCommentInfo(newComment));
       onClearData();
     } catch (error) {
       console.log(error);
@@ -74,7 +57,7 @@ const CommentsScreen = ({ navigation, route }) => {
     </TouchableOpacity>
   );
 
-  const [comments, setComments] = useState(commentsExample);
+  // const [comments, setComments] = useState(commentsExample);
 
   const renderItem = ({ item }) => (
     <View style={styles.commentContainer}>

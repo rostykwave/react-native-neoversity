@@ -9,6 +9,7 @@ import { auth } from "../../config";
 import { setUserInfo, clearUserInfo } from "../redux/reducers/userSlice";
 import { addUser, getUser } from "./firestore";
 import { clearCommentInfo } from "../redux/reducers/commentSlice";
+import { clearPostsInfo } from "../redux/reducers/postSlice";
 
 // Функція для реєстрації користувача
 export const registerDB = async ({ login, email, password }) => {
@@ -58,6 +59,7 @@ export const logoutDB = async (dispatch) => {
     // Очистити інформацію про користувача у Redux
     dispatch(clearUserInfo());
     dispatch(clearCommentInfo());
+    dispatch(clearPostsInfo());
   } catch (error) {
     console.error("Logout error:", error);
   }

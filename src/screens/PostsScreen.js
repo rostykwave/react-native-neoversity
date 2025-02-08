@@ -10,31 +10,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styles/global";
-
-const posts = [
-  {
-    id: "1",
-    image: require("../../assets/forests.png"),
-    title: "Ліс",
-    location: {
-      name: "Ivano-Frankivsk Region, Ukraine",
-      latitude: 48.9226,
-      longitude: 24.7097,
-    },
-  },
-  {
-    id: "2",
-    image: require("../../assets/sunsets.png"),
-    title: "Захід сонця",
-    location: {
-      name: "Odesa Region, Ukraine",
-      latitude: 46.482952,
-      longitude: 30.712481,
-    },
-  },
-];
+import { useSelector } from "react-redux";
 
 const PostsScreen = ({ navigation, route }) => {
+  const posts = useSelector((state) => state.post.posts);
   const openComments = ({ imageSrc }) => {
     navigation.navigate("Comments", { imageSrc });
   };
@@ -56,7 +35,9 @@ const PostsScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         <Text style={styles.commentsCount}>0</Text>
         <TouchableOpacity onPress={() => openMaps(item.location)}>
-          <Text style={styles.postLocation}>{item.location.name}</Text>
+          <Text style={styles.postLocation}>
+            {item.location && item.location.name}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

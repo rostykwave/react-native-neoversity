@@ -17,12 +17,14 @@ import { colors } from "../../styles/global";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPost, getPosts, uploadImage } from "../utils/firestore";
+import { addPostInfo } from "../redux/reducers/postSlice";
 
 const PLACES_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
 
 const CreatePostScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const params = route?.params;
   const [selectedImage, setSelectedImage] = useState(null);
   const [title, setTitle] = useState("");
@@ -98,16 +100,21 @@ const CreatePostScreen = ({ navigation, route }) => {
       const imageUrl = await uploadImageToStorage();
       const postId = nanoid();
 
-      await addPost(postId, {
-        address,
+      const newPost = {
         id: postId,
         image: imageUrl,
         userId: user.uid,
         title,
-      });
+        location: { name: address },
+      };
+
+      await addPost(user.uid, newPost);
+
+      dispatch(addPostInfo(newPost));
 
       Alert.alert("Пост успішно створено!");
       onClearData();
+      navigation.goBack();
     } catch (error) {
       console.log(error);
     }

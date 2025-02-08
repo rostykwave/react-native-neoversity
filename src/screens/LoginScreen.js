@@ -23,19 +23,28 @@ import { useDispatch } from "react-redux";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const LoginScreen = ({ route, navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formState, setFormState] = useState({
+    email: "",
+    password: "",
+  });
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [selectedInput, setSelelectedInput] = useState("password");
 
   const dispatch = useDispatch();
 
+  const handleChange = (field, value) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
   const handleEmailChange = (value) => {
-    setEmail(value);
+    handleChange("email", value);
   };
 
   const handlePasswordChange = (value) => {
-    setPassword(value);
+    handleChange("password", value);
   };
 
   const showPassword = () => {
@@ -43,10 +52,8 @@ const LoginScreen = ({ route, navigation }) => {
   };
 
   const onLogin = async () => {
-    console.log("onLogin");
-
     try {
-      await loginDB({ email, password }, dispatch);
+      await loginDB(formState, dispatch);
     } catch (err) {
       Alert.alert("err");
       console.error("Login error:", err); // Логування помилок
@@ -81,7 +88,7 @@ const LoginScreen = ({ route, navigation }) => {
 
             <View style={[styles.innerContainer, styles.inputContainer]}>
               <Input
-                value={email}
+                value={formState.email}
                 autofocus={true}
                 placeholder="Адреса електронної пошти"
                 onTextChange={handleEmailChange}
@@ -89,7 +96,7 @@ const LoginScreen = ({ route, navigation }) => {
 
               <Pressable onPress={() => setSelelectedInput("password")}>
                 <Input
-                  value={password}
+                  value={formState.password}
                   placeholder="Пароль"
                   rightButton={showButton}
                   outerStyles={styles.passwordButton}

@@ -23,22 +23,31 @@ import ProfilePhoto from "../components/ProfilePhoto";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const RegistrationScreen = ({ route, navigation }) => {
-  const [login, setLogin] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formState, setFormState] = useState({
+    login: "",
+    email: "",
+    password: "",
+  });
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [selectedInput, setSelelectedInput] = useState("password");
 
+  const handleChange = (field, value) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
   const handleLoginChange = (value) => {
-    setLogin(value);
+    handleChange("login", value);
   };
 
   const handleEmailChange = (value) => {
-    setEmail(value);
+    handleChange("email", value);
   };
 
   const handlePasswordChange = (value) => {
-    setPassword(value);
+    handleChange("password", value);
   };
 
   const showPassword = () => {
@@ -46,7 +55,7 @@ const RegistrationScreen = ({ route, navigation }) => {
   };
 
   const onSignUp = async () => {
-    registerDB({ login, email, password });
+    registerDB(formState);
   };
 
   const onLogIn = () => {
@@ -84,19 +93,19 @@ const RegistrationScreen = ({ route, navigation }) => {
             <View style={[styles.innerContainer, styles.inputContainer]}>
               <Input
                 autofocus={true}
-                value={login}
+                value={formState.login}
                 placeholder="Логін"
                 onTextChange={handleLoginChange}
               />
               <Input
-                value={email}
+                value={formState.email}
                 placeholder="Адреса електронної пошти"
                 onTextChange={handleEmailChange}
               />
 
               <Pressable onPress={() => setSelelectedInput("password")}>
                 <Input
-                  value={password}
+                  value={formState.password}
                   placeholder="Пароль"
                   rightButton={showButton}
                   outerStyles={styles.passwordButton}
